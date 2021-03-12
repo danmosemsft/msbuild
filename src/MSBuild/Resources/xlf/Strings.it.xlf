@@ -45,6 +45,11 @@ Copyright (C) Microsoft Corporation. Tutti i diritti sono riservati.
     that itself launches MSBuild on a number of other projects.
     LOCALIZATION: The prefix "MSBUILD : error MSBxxxx:" should not be localized.</note>
       </trans-unit>
+      <trans-unit id="EnvironmentSwitches">
+        <source>Reading switches from environment variable _MSBUILD_: "{0}"</source>
+        <target state="new">Reading switches from environment variable _MSBUILD_: "{0}"</target>
+        <note />
+      </trans-unit>
       <trans-unit id="FatalError">
         <source>MSBUILD : error MSB1025: An internal failure occurred while running MSBuild.</source>
         <target state="translated">MSBUILD : error MSB1025: errore interno durante l'esecuzione di MSBuild.</target>

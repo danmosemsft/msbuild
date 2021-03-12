@@ -1291,6 +1291,43 @@ namespace Microsoft.Build.CommandLine
 
             return success;
         }
+        
+        private static IEnumerable<BuildManager.DeferredBuildMessage> GetMessagesToLogInBuildLoggers()
+        {
+            return new[]
+            {
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "Process",
+                        Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty),
+                    MessageImportance.Low),
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "MSBExePath",
+                        BuildEnvironmentHelper.Instance.CurrentMSBuildExePath),
+                    MessageImportance.Low),
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "CommandLine",
+                        Environment.CommandLine),
+                    MessageImportance.Low),
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "CurrentDirectory",
+                        Environment.CurrentDirectory),
+                    MessageImportance.Low),
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "MSBVersion",
+                        ProjectCollection.DisplayVersion),
+                    MessageImportance.Low),
+                new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "EnvironmentSwitches",
+                        Environment.GetEnvironmentVariable("_MSBUILD_")),
+                    MessageImportance.Low)
+            };
+        }
 
         private static (BuildResultCode result, Exception exception) ExecuteBuild(BuildManager buildManager, BuildRequestData request)
         {

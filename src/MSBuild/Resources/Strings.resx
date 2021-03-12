@@ -1226,6 +1226,24 @@ Copyright (C) Microsoft Corporation. All rights reserved.
       logger could not be created -- this message comes from the CLR/FX and is localized.
     </comment>
   </data>
+  <data name="Process" Visibility="Public">
+    <value>Process = "{0}"</value>
+  </data>
+  <data name="MSBExePath" Visibility="Public">
+    <value>MSBuild executable path = "{0}"</value>
+  </data>
+  <data name="CommandLine" Visibility="Public">
+    <value>Command line arguments = "{0}"</value>
+  </data>
+  <data name="CurrentDirectory" Visibility="Public">
+    <value>Current directory = "{0}"</value>
+  </data>
+  <data name="MSBVersion" Visibility="Public">
+    <value>MSBuild version = "{0}"</value>
+  </data>
+<data name="EnvironmentSwitches" Visibility="Public">
+    <value>Reading switches from environment variable _MSBUILD_: "{0}"</value>
+  </data>
     <!--
         The command line message bucket is: MSB1001 - MSB1999
 
