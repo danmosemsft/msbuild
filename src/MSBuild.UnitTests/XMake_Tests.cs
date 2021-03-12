@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -18,6 +17,9 @@ using Xunit;
 using Xunit.Abstractions;
 using Shouldly;
 using System.IO.Compression;
+#if FEATURE_ASSEMBLYLOADCONTEXT
+using System.Reflection;
+#endif
 
 namespace Microsoft.Build.UnitTests
 {
@@ -2066,6 +2068,7 @@ namespace Microsoft.Build.UnitTests
         [InlineData("   /p:p1=v1a  /p:p1=v1b   ", "[v1b][][v3][v4]")]   // simple case, override order, lead/trail whitespace
         [InlineData("/p:p1=v1 /p:p2=\"v2a v2b\"", "[v1][v2a v2b][v3][v4]")] // split quoted values correctly
         [InlineData("/p:p1=\"username is %username%\"", "[username is %username%][]")] // expand env vars, like for response file content
+        [InlineData("/p:p1=v1;p2=v2", "[v1][v2][v3][v4]")]
         public void ArgumentsPulledFromEnvironmentVariable(string value, string expected)
         {
             expected = Environment.ExpandEnvironmentVariables(expected);

@@ -2,8 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Linq;
 using System.Reflection;
+#if !FEATURE_TYPE_GETINTERFACE
+using System.Linq;
+#endif
 
 using Microsoft.Build.Framework;
 

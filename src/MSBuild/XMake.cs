@@ -1556,7 +1556,7 @@ namespace Microsoft.Build.CommandLine
                 // we have to split these into individual arguments, as we do for response file content,
                 // since the shell didn't do this for us; also expand environment variables, to be consistent
                 // with response file content
-                ArrayList extraArgs = QuotingUtilities.SplitUnquoted(Environment.ExpandEnvironmentVariables(extraCommandLine));
+                List<string> extraArgs = QuotingUtilities.SplitUnquoted(Environment.ExpandEnvironmentVariables(extraCommandLine));
                 // we want these last in the non-response file switches, so they win over all other switches
                 GatherCommandLineSwitches(extraArgs, switchesNotFromAutoResponseFile);
             }
