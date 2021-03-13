@@ -1291,6 +1291,47 @@ namespace Microsoft.Build.CommandLine
 
             return success;
         }
+        
+        private static IEnumerable<BuildManager.DeferredBuildMessage> GetMessagesToLogInBuildLoggers()
+        {
+            using (Process p = Process.GetCurrentProcess())
+            {
+                yield return new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "Process",
+                        p.MainModule?.FileName ?? string.Empty),
+                    MessageImportance.Low);
+            }
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "MSBExePath",
+                    BuildEnvironmentHelper.Instance.CurrentMSBuildExePath),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "CommandLine",
+                    Environment.CommandLine),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "CurrentDirectory",
+                    Environment.CurrentDirectory),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "MSBVersion",
+                    ProjectCollection.DisplayVersion),
+                MessageImportance.Low);
+            string envVariableSwitch = Environment.GetEnvironmentVariable("_MSBUILD_");
+            if (!String.IsNullOrEmpty(envVariableSwitch))
+            {
+                yield return new BuildManager.DeferredBuildMessage(
+                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                        "EnvironmentSwitches",
+                        envVariableSwitch),
+                    MessageImportance.Low);
+            }
+        }
 
         private static (BuildResultCode result, Exception exception) ExecuteBuild(BuildManager buildManager, BuildRequestData request)
         {
@@ -1556,7 +1597,7 @@ namespace Microsoft.Build.CommandLine
                 // we have to split these into individual arguments, as we do for response file content,
                 // since the shell didn't do this for us; also expand environment variables, to be consistent
                 // with response file content
-                ArrayList extraArgs = QuotingUtilities.SplitUnquoted(Environment.ExpandEnvironmentVariables(extraCommandLine));
+                List<string> extraArgs = QuotingUtilities.SplitUnquoted(Environment.ExpandEnvironmentVariables(extraCommandLine));
                 // we want these last in the non-response file switches, so they win over all other switches
                 GatherCommandLineSwitches(extraArgs, switchesNotFromAutoResponseFile);
             }
