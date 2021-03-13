@@ -1294,39 +1294,43 @@ namespace Microsoft.Build.CommandLine
         
         private static IEnumerable<BuildManager.DeferredBuildMessage> GetMessagesToLogInBuildLoggers()
         {
-            return new[]
+            using (Process p = Process.GetCurrentProcess())
             {
-                new BuildManager.DeferredBuildMessage(
+                yield return new BuildManager.DeferredBuildMessage(
                     ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
                         "Process",
-                        Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty),
-                    MessageImportance.Low),
-                new BuildManager.DeferredBuildMessage(
-                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
-                        "MSBExePath",
-                        BuildEnvironmentHelper.Instance.CurrentMSBuildExePath),
-                    MessageImportance.Low),
-                new BuildManager.DeferredBuildMessage(
-                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
-                        "CommandLine",
-                        Environment.CommandLine),
-                    MessageImportance.Low),
-                new BuildManager.DeferredBuildMessage(
-                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
-                        "CurrentDirectory",
-                        Environment.CurrentDirectory),
-                    MessageImportance.Low),
-                new BuildManager.DeferredBuildMessage(
-                    ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
-                        "MSBVersion",
-                        ProjectCollection.DisplayVersion),
-                    MessageImportance.Low),
-                new BuildManager.DeferredBuildMessage(
+                        p.MainModule?.FileName ?? string.Empty),
+                    MessageImportance.Low);
+            }
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "MSBExePath",
+                    BuildEnvironmentHelper.Instance.CurrentMSBuildExePath),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "CommandLine",
+                    Environment.CommandLine),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "CurrentDirectory",
+                    Environment.CurrentDirectory),
+                MessageImportance.Low);
+            yield return new BuildManager.DeferredBuildMessage(
+                ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
+                    "MSBVersion",
+                    ProjectCollection.DisplayVersion),
+                MessageImportance.Low);
+            string envVariableSwitch = Environment.GetEnvironmentVariable("_MSBUILD_");
+            if (!String.IsNullOrEmpty(envVariableSwitch))
+            {
+                yield return new BuildManager.DeferredBuildMessage(
                     ResourceUtilities.FormatResourceStringIgnoreCodeAndKeyword(
                         "EnvironmentSwitches",
-                        Environment.GetEnvironmentVariable("_MSBUILD_")),
-                    MessageImportance.Low)
-            };
+                        envVariableSwitch),
+                    MessageImportance.Low);
+            }
         }
 
         private static (BuildResultCode result, Exception exception) ExecuteBuild(BuildManager buildManager, BuildRequestData request)
